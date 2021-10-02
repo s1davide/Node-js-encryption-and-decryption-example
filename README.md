@@ -3,7 +3,7 @@
 ### To encrypt file
 With the video example:
 ```bash
-npm run enc-file orgPath=videoTest.mp4 destPath=enc/videoTestEncoded.mp4 algorithm=aes-128-ofb  key=1234567890123456 iv=1234567890123456
+npm run enc-file orgPath=videoTest.mp4 destPath=enc/videoTestEncrypted.mp4 algorithm=aes-128-ofb  key=1234567890123456 iv=1234567890123456
 ```
 
 ### To decrypt the file
