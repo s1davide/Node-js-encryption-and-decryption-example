@@ -16,6 +16,7 @@ const createDecipher = (algorithm, key, iv) =>
   iv
     ? crypto.createCipheriv(algorithm, key, iv)
     : crypto.createCipheriv(algorithm, key);
+
 const decryptFile = (algorithm, buffer, key, iv = undefined) =>
   createDecipher(algorithm, key, iv).update(buffer);
 
@@ -40,6 +41,7 @@ const readFileFromPath = (path) =>
       err ? resolve({ r: false, v: err }) : resolve({ r: true, v: data })
     )
   );
+
 const saveFile = (data, path) =>
   new Promise((resolve, reject) =>
     fs.writeFile(`${path}`, data, "binary", (err) =>
@@ -74,6 +76,7 @@ module.exports.encryptFileFromPath = async (argR = process.argv) =>
         getArgv(argR, "destPath"),
         "encrypted"
       );
+
 module.exports.decryptFileFromPath = async (argR = process.argv) =>
   argMissing(argR, argvNeeded)
     ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvNeeded)))
