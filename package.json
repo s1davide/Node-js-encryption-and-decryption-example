@@ -1,0 +1,13 @@
+{
+  "name": "node-enc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "enc-file": "node -e 'require(`./index.js`).encryptFileFromPath()'",
+    "dec-file":"node -e 'require(`./index.js`).decryptFileFromPath()'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
