@@ -4,21 +4,20 @@ const argvNeeded = ["orgPath", "destPath", "algorithm", "key", "iv"];
 const argv = process.argv;
 const title = require("./title");
 
-const createCipher = (algorithm, key, iv) =>
-  iv
-    ? crypto.createCipheriv(algorithm, key, iv)
-    : crypto.createCipheriv(algorithm, key);
-
+const createCipher = (algorithm, key, iv, ciph) =>
+  ciph == "c"
+    ? iv
+      ? crypto.createCipheriv(algorithm, key, iv)
+      : crypto.createCipheriv(algorithm, key)
+    : iv
+    ? crypto.createDecipheriv(algorithm, key, iv)
+    : crypto.createDecipheriv(algorithm, key);
+    
 const encryptFile = (algorithm, buffer, key, iv = undefined) =>
-  createCipher(algorithm, key, iv).update(buffer);
-
-const createDecipher = (algorithm, key, iv) =>
-  iv
-    ? crypto.createCipheriv(algorithm, key, iv)
-    : crypto.createCipheriv(algorithm, key);
+  createCipher(algorithm, key, iv, "c").update(buffer);
 
 const decryptFile = (algorithm, buffer, key, iv = undefined) =>
-  createDecipher(algorithm, key, iv).update(buffer);
+  createCipher(algorithm, key, iv, "d").update(buffer);
 
 const hasArg = (args, arg) =>
   args.filter((f) => (f ? f.indexOf(arg) > -1 : false)).length > 0
