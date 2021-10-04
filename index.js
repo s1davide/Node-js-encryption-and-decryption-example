@@ -41,6 +41,7 @@ const readFileFromPath = (path) =>
       err ? resolve({ r: false, v: err }) : resolve({ r: true, v: data })
     )
   );
+  
 const getDir = (path) =>
   path.split("/").length > 1 ? path.split("/")[0] : "/";
 
