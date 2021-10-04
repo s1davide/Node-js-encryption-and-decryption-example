@@ -41,7 +41,7 @@ const readFileFromPath = (path) =>
       err ? resolve({ r: false, v: err }) : resolve({ r: true, v: data })
     )
   );
-  
+
 const getDir = (path) =>
   path.split("/").length > 1 ? path.split("/")[0] : "/";
 
@@ -78,9 +78,9 @@ const resultSave = (r, path, action) =>
       )
     : console.log("\x1b[31m", `An error has occurred`);
 
-module.exports.encryptFileFromPath = async (argR = process.argv) =>
-  argMissing(argR, argvNeeded)
-    ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvNeeded)))
+module.exports.encryptFileFromPath = async (argR = argv,argvN=argvNeeded) =>
+  argMissing(argR, argvN)
+    ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvN)))
     : resultSave(
         await saveFile(
           encryptFile(
@@ -97,9 +97,9 @@ module.exports.encryptFileFromPath = async (argR = process.argv) =>
         "encrypted"
       );
 
-module.exports.decryptFileFromPath = async (argR = process.argv) =>
-  argMissing(argR, argvNeeded)
-    ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvNeeded)))
+module.exports.decryptFileFromPath = async (argR = argv, argvN=argvNeeded) =>
+  argMissing(argR, argvN)
+    ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvN)))
     : resultSave(
         await saveFile(
           decryptFile(
@@ -130,7 +130,7 @@ console.log(
     process.execArgv[1].indexOf(".encryptFileFromPath") > -1
       ? "encryption"
       : "decription"
-  } on the path: ${getArgv(process.argv, "orgPath")}...`
+  } on the path: ${getArgv(argv, "orgPath")}...`
 );
 /*
             Print the title and initial message
