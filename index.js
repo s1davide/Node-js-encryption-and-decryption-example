@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const argvNeeded = ["orgPath", "destPath", "algorithm", "key", "iv"];
 const argv = process.argv;
 const title = require("./title");
+const { resolve } = require("path");
 
 const createCipher = (algorithm, key, iv, ciph) =>
   ciph == "c"
@@ -12,7 +13,7 @@ const createCipher = (algorithm, key, iv, ciph) =>
     : iv
     ? crypto.createDecipheriv(algorithm, key, iv)
     : crypto.createDecipheriv(algorithm, key);
-    
+
 const encryptFile = (algorithm, buffer, key, iv = undefined) =>
   createCipher(algorithm, key, iv, "c").update(buffer);
 
@@ -40,11 +41,28 @@ const readFileFromPath = (path) =>
       err ? resolve({ r: false, v: err }) : resolve({ r: true, v: data })
     )
   );
+const getDir = (path) =>
+  path.split("/").length > 1 ? path.split("/")[0] : "/";
+
+const existFolder = (path) =>
+  new Promise((resolve, reject) =>
+    !fs.existsSync(getDir(path))
+      ? fs.mkdir(getDir(path), { recursive: true }, (err) =>
+          err
+            ? resolve(console.log(err))
+            : resolve(
+                console.log("\x1b[32m",`The ${getDir(path)} directory has been created`)
+              )
+        )
+      : resolve(true)
+  );
 
 const saveFile = (data, path) =>
   new Promise((resolve, reject) =>
-    fs.writeFile(`${path}`, data, "binary", (err) =>
-      err ? resolve(false) : resolve(path)
+    existFolder(path).then(() =>
+      fs.writeFile(`${path}`, data, (err) =>
+        err ? resolve(false) : resolve(path)
+      )
     )
   );
 
@@ -63,10 +81,12 @@ module.exports.encryptFileFromPath = async (argR = process.argv) =>
   argMissing(argR, argvNeeded)
     ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvNeeded)))
     : resultSave(
-        saveFile(
+        await saveFile(
           encryptFile(
             getArgv(argR, "algorithm"),
-            (await readFileFromPath(getArgv(argR, "orgPath")))["v"],
+            (
+              await readFileFromPath(getArgv(argR, "orgPath"))
+            )["v"],
             getArgv(argR, "key"),
             getArgv(argR, "iv")
           ),
@@ -80,10 +100,12 @@ module.exports.decryptFileFromPath = async (argR = process.argv) =>
   argMissing(argR, argvNeeded)
     ? console.log("\x1b[31m", getMsgArgsMissing(argMissing(argR, argvNeeded)))
     : resultSave(
-        saveFile(
+        await saveFile(
           decryptFile(
             getArgv(argR, "algorithm"),
-            (await readFileFromPath(getArgv(argR, "orgPath")))["v"],
+            (
+              await readFileFromPath(getArgv(argR, "orgPath"))
+            )["v"],
             getArgv(argR, "key"),
             getArgv(argR, "iv")
           ),
